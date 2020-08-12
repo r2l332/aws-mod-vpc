@@ -1,2 +1,7 @@
+variable "name" {}
 variable "vpc_cidr" {}
-variable "subnet_cidrs" {}
+variable "pub_subnet_cidrs" {}
+variable "priv_subnet_cidrs" {}
+variable "region" {}
+variable "ddb_name" {}
+variable "bucket_name" {}
