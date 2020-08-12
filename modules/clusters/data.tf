@@ -1,7 +1,7 @@
 data "aws_vpc" "eks_vpc" {
   filter {
     name   = "tag:Name"
-    values = ["eks"]
+    values = ["eks.vpc"]
   }
 }
 
