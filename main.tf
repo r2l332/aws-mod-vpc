@@ -10,7 +10,7 @@ module "eks_vpc" {
 # module "eks_cluster" {
 #   source         = "./modules/clusters"
 #   name           = var.name
-#   create_network = var.create_network
+#   subnet_ids     = module.eks_vpc.eks_private_subnet
 # }
 
 # module "eks_workers" {
