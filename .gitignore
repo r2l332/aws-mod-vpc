@@ -1,6 +1,12 @@
 # Local .terraform directories
 **/.terraform/*
 
+# Sensitive tfvars files
+terraform.tfvars
+
+# Backend Configuration
+backend.tf
+
 # .tfstate files
 *.tfstate
 *.tfstate.*
