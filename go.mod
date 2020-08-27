@@ -1,4 +1,4 @@
-module github-r2l332/r2l332/aws-mod-eks.git
+module github.com/r2l332/aws-mod-vpc.git
 
 go 1.13
 

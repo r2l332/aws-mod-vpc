@@ -32,3 +32,12 @@ Module to VPC plus 6 subnets; 3 private and 3 public.
 | public\_subnet | Returns public subnet ids |
 | route\_table\_id | Returns route table id |
 | vpc\_id | Returns VPC id
+
+## Go Test
+
+Make sure Go is installed and GOPATH/GOROOT have been set correctly. 
+  
+From the root of the module run the following commands...
+
+*`$ go mod tidy`
+*`$ go test ./test -test.timeout 0 -v`
