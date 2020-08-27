@@ -18,18 +18,17 @@ Module to VPC plus 6 subnets; 3 private and 3 public.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| create\_network | Creates Entire network stack | `bool` | n/a | yes |
-| name | n/a | `any` | n/a | yes |
-| priv\_subnet\_cidrs | n/a | `list` | n/a | yes |
-| pub\_subnet\_cidrs | n/a | `list` | n/a | yes |
-| region | n/a | `any` | n/a | yes |
-| vpc\_cidr | n/a | `any` | n/a | yes |
+| name | Name of VPC stack - This will also be used in subnet names and other network related components | `string` | n/a | yes |
+| priv\_subnet\_cidrs | List of private subnets to create | `list(string)` | n/a | yes |
+| pub\_subnet\_cidrs | List of public subnets to create | `list(string)` | n/a | yes |
+| region | Where to deploy VPC | `string` | n/a | yes |
+| vpc\_cidr | VPC Cidr to create e.g `10.0.0.0/16` | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| eks\_private\_subnet | n/a |
-| eks\_public\_subnet | n/a |
-| eks\_vpc\_id | n/a |
-| route\_table\_ids | n/a |
+| private\_subnet | Returns private subnet ids |
+| public\_subnet | Returns public subnet ids |
+| route\_table\_id | Returns route table id |
+| vpc\_id | Returns VPC id

@@ -3,7 +3,3 @@ variable "vpc_cidr" {}
 variable "pub_subnet_cidrs" {}
 variable "priv_subnet_cidrs" {}
 variable "region" {}
-variable "create_network" {
-  type        = bool
-  description = "Creates Entire network stack"
-}

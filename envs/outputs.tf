@@ -1,15 +1,15 @@
-output "eks_vpc_id" {
-  value = module.vpc.eks_vpc_id
+output "vpc_id" {
+  value = module.test_vpc.vpc_id
 }
 
-output "eks_public_subnet" {
-  value = module.vpc.eks_public_subnet
+output "public_subnet" {
+  value = module.test_vpc.public_subnet
 }
 
-output "eks_private_subnet" {
-  value = module.vpc.eks_private_subnet
+output "private_subnet" {
+  value = module.test_vpc.private_subnet
 }
 
 output "route_table_ids" {
-  value = module.vpc.route_table_ids
+  value = module.test_vpc.route_table_ids
 }

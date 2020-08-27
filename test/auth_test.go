@@ -2,11 +2,11 @@ package vpc
 
 import (
 	"flag"
-	"os"
-	"testing"
 	"math/rand"
-	"time"
+	"os"
 	"strings"
+	"testing"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws/session"
 	awst "github.com/gruntwork-io/terratest/modules/aws"
@@ -32,8 +32,8 @@ func TestMain(m *testing.M) {
 		// Lazily generate the default identifier to avoid problems of using user.Current within a Docker container
 		rand.Seed(time.Now().UnixNano())
 		chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-    					"abcdefghijklmnopqrstuvwxyz" +
-						"0123456789")
+			"abcdefghijklmnopqrstuvwxyz" +
+			"0123456789")
 		length := 8
 		var b strings.Builder
 		for i := 0; i < length; i++ {
@@ -59,7 +59,7 @@ func findTerraformBackend(t *testing.T) (string, string) {
 	var bucket string
 	var table string
 	bucket = "eks-module-terraform-tfstate"
-	table  = "terraform-state-lock"
+	table = "terraform-state-lock"
 	return bucket, table
 }
 

@@ -33,8 +33,8 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 
 	terraformOptions := &terraform.Options{
 		Vars: map[string]interface{}{
-			"region":              	   		region,
-			"name":							name,
+			"region": region,
+			"name":   name,
 		},
 		VarFiles: []string{"terraform.tfvars"},
 		EnvVars: map[string]string{
@@ -44,7 +44,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 			"AWS_SDK_LOAD_CONFIG":   os.Getenv("AWS_SDK_LOAD_CONFIG"),
 			"AWS_CONFIG_FILE":       os.Getenv("AWS_CONFIG_FILE"),
 			"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),
-			"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),	
+			"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),
 			"AWS_SESSION_TOKEN":     os.Getenv("AWS_SESSION_TOKEN"),
 		},
 		BackendConfig: backendConfig,
@@ -58,13 +58,13 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 
 	terraform.Apply(t, terraformOptions)
 
-	vpcId 			:= terraform.Output(t, terraformOptions, "eks_vpc_id")
-	pubSubnetId 	:= terraform.OutputList(t, terraformOptions, "eks_public_subnet")
-	privSubnetId 	:= terraform.OutputList(t, terraformOptions, "eks_private_subnet")
+	vpcId := terraform.Output(t, terraformOptions, "vpc_id")
+	pubSubnetId := terraform.OutputList(t, terraformOptions, "public_subnet")
+	privSubnetId := terraform.OutputList(t, terraformOptions, "private_subnet")
 	// routeTableId 	:= terraform.Output(t, terraformOptions, "route_table_ids")
 
 	vpcSvc := ec2.New(getDevAccountSession())
-	
+
 	vpcInput := &ec2.DescribeVpcsInput{
 		VpcIds: []*string{awssdk.String(vpcId)},
 	}
@@ -74,18 +74,18 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	}
 
 	vpCreated := false
-	for _, vpc := range getVpc.Vpcs{
+	for _, vpc := range getVpc.Vpcs {
 		if *vpc.CidrBlock == "10.0.0.0/16" {
 			vpCreated = true
 		}
 	}
-	
+
 	assert.True(t, vpCreated)
 
 	pubSubNetInput := &ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: awssdk.String("subnet-id"),
+				Name:   awssdk.String("subnet-id"),
 				Values: []*string{awssdk.String(pubSubnetId[0])},
 			},
 		},
@@ -94,7 +94,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	pubSubNetInput1 := &ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: awssdk.String("subnet-id"),
+				Name:   awssdk.String("subnet-id"),
 				Values: []*string{awssdk.String(pubSubnetId[1])},
 			},
 		},
@@ -103,32 +103,32 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	pubSubNetInput2 := &ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: awssdk.String("subnet-id"),
+				Name:   awssdk.String("subnet-id"),
 				Values: []*string{awssdk.String(pubSubnetId[2])},
 			},
 		},
 	}
 
-	getPubSub, err  := vpcSvc.DescribeSubnets(pubSubNetInput)
+	getPubSub, err := vpcSvc.DescribeSubnets(pubSubNetInput)
 	getPubSub1, err := vpcSvc.DescribeSubnets(pubSubNetInput1)
 	getPubSub2, err := vpcSvc.DescribeSubnets(pubSubNetInput2)
 
 	psub := false
-	for _, snet := range getPubSub.Subnets{
+	for _, snet := range getPubSub.Subnets {
 		if *snet.SubnetId == pubSubnetId[0] {
 			psub = true
 		}
 	}
 	assert.True(t, psub)
 	psub1 := false
-	for _, snet := range getPubSub1.Subnets{
+	for _, snet := range getPubSub1.Subnets {
 		if *snet.SubnetId == pubSubnetId[1] {
 			psub1 = true
 		}
 	}
 	assert.True(t, psub1)
 	psub2 := false
-	for _, snet := range getPubSub2.Subnets{
+	for _, snet := range getPubSub2.Subnets {
 		if *snet.SubnetId == pubSubnetId[2] {
 			psub2 = true
 		}
@@ -138,7 +138,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	privSubNetInput0 := &ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: awssdk.String("subnet-id"),
+				Name:   awssdk.String("subnet-id"),
 				Values: []*string{awssdk.String(privSubnetId[0])},
 			},
 		},
@@ -147,7 +147,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	privSubNetInput1 := &ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: awssdk.String("subnet-id"),
+				Name:   awssdk.String("subnet-id"),
 				Values: []*string{awssdk.String(privSubnetId[1])},
 			},
 		},
@@ -156,7 +156,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	privSubNetInput2 := &ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
 			{
-				Name: awssdk.String("subnet-id"),
+				Name:   awssdk.String("subnet-id"),
 				Values: []*string{awssdk.String(privSubnetId[2])},
 			},
 		},
@@ -167,21 +167,21 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	getPrivSub2, err := vpcSvc.DescribeSubnets(privSubNetInput2)
 
 	priv0 := false
-	for _, snet := range getPrivSub0.Subnets{
+	for _, snet := range getPrivSub0.Subnets {
 		if *snet.SubnetId == privSubnetId[0] {
 			priv0 = true
 		}
 	}
 	assert.True(t, priv0)
 	priv1 := false
-	for _, snet := range getPrivSub1.Subnets{
+	for _, snet := range getPrivSub1.Subnets {
 		if *snet.SubnetId == privSubnetId[1] {
 			priv1 = true
 		}
 	}
 	assert.True(t, priv1)
 	priv2 := false
-	for _, snet := range getPrivSub2.Subnets{
+	for _, snet := range getPrivSub2.Subnets {
 		if *snet.SubnetId == privSubnetId[2] {
 			priv2 = true
 		}
