@@ -1,20 +1,20 @@
 locals {
   vpc_tags = {
-    Name    = "eks.vpc"
-    service = "k8s"
+    Name    = "${var.name}.vpc"
+    service = "web"
   }
   subnet_tags_public = {
-    service = "k8s"
+    service = "web"
   }
   subnet_tags_private = {
-    service = "k8s"
+    service = "web"
   }
   egress_gateway = {
-    Name    = "eks.egress.gateway"
-    service = "k8s"
+    Name    = "${var.name}.egress.gateway"
+    service = "web"
   }
   internet_gateway = {
-    Name    = "eks.internet.gateway"
-    service = "k8s"
+    Name    = "${var.name}.internet.gateway"
+    service = "web"
   }
 }

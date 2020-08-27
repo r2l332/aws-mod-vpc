@@ -1,5 +1,5 @@
 ## VPC Creation
-resource "aws_vpc" "eks_vpc" {
+resource "aws_vpc" "vpc" {
   cidr_block                       = var.vpc_cidr
   instance_tenancy                 = "default"
   enable_dns_hostnames             = true
@@ -18,7 +18,7 @@ resource "aws_eip" "nat_gateway_ips" {
 resource "aws_internet_gateway" "this" {
   count = length(var.pub_subnet_cidrs) > 0 ? 1 : 0
 
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = aws_vpc.vpc.id
 
   tags = merge(
     {
@@ -28,20 +28,20 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
-resource "aws_egress_only_internet_gateway" "eks_egress_gateway" {
-  vpc_id = aws_vpc.eks_vpc.id
+resource "aws_egress_only_internet_gateway" "egress_gateway" {
+  vpc_id = aws_vpc.vpc.id
   tags   = local.egress_gateway
 }
 
 ## Creation Of NAT GW's
-resource "aws_nat_gateway" "eks_private_nat_gws" {
+resource "aws_nat_gateway" "private_nat_gws" {
   count = length(var.pub_subnet_cidrs) > 0 ? 1 : 0
 
   allocation_id = element(
     aws_eip.nat_gateway_ips.*.id, count.index
   )
   subnet_id = element(
-    aws_subnet.eks_subnet_public.*.id, count.index
+    aws_subnet.subnet_public.*.id, count.index
   )
 
   tags = merge(
@@ -58,9 +58,9 @@ resource "aws_nat_gateway" "eks_private_nat_gws" {
 }
 
 ## Route Table Creation
-resource "aws_route_table" "eks_route_table_public" {
+resource "aws_route_table" "route_table_public" {
   count  = length(var.pub_subnet_cidrs) > 0 ? 1 : 0
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = aws_vpc.vpc.id
 
   tags = merge(
     {
@@ -73,10 +73,10 @@ resource "aws_route_table" "eks_route_table_public" {
   )
 }
 
-resource "aws_route_table" "eks_route_table_private" {
+resource "aws_route_table" "route_table_private" {
   count = length(var.priv_subnet_cidrs) > 0 ? 1 : 0
 
-  vpc_id = aws_vpc.eks_vpc.id
+  vpc_id = aws_vpc.vpc.id
 
   tags = merge(
     {
@@ -90,26 +90,26 @@ resource "aws_route_table" "eks_route_table_private" {
 }
 
 ## Route Table Creation
-resource "aws_route_table_association" "public_eks_association" {
+resource "aws_route_table_association" "public_association" {
   count = length(var.pub_subnet_cidrs) > 0 ? length(var.pub_subnet_cidrs) : 0
 
-  subnet_id      = element(aws_subnet.eks_subnet_public.*.id, count.index)
-  route_table_id = aws_route_table.eks_route_table_public[0].id
+  subnet_id      = element(aws_subnet.subnet_public.*.id, count.index)
+  route_table_id = aws_route_table.route_table_public[0].id
 }
 
-resource "aws_route_table_association" "private_eks_association" {
+resource "aws_route_table_association" "private_association" {
   count = length(var.priv_subnet_cidrs) > 0 ? length(var.priv_subnet_cidrs) : 0
 
-  subnet_id      = element(aws_subnet.eks_subnet_private.*.id, count.index)
-  route_table_id = aws_route_table.eks_route_table_private[0].id
+  subnet_id      = element(aws_subnet.subnet_private.*.id, count.index)
+  route_table_id = aws_route_table.route_table_private[0].id
 
 }
 
 ## AWS Route creation
-resource "aws_route" "public_eks_route" {
+resource "aws_route" "public_route" {
   count = length(var.pub_subnet_cidrs) > 0 ? length(var.pub_subnet_cidrs) : 0
 
-  route_table_id         = aws_route_table.eks_route_table_public[0].id
+  route_table_id         = aws_route_table.route_table_public[0].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this[0].id
 
@@ -121,9 +121,9 @@ resource "aws_route" "public_eks_route" {
 resource "aws_route" "private_nat_gateway" {
   count = length(var.priv_subnet_cidrs) > 0 ? 1 : 0
 
-  route_table_id         = element(aws_route_table.eks_route_table_private.*.id, count.index)
+  route_table_id         = element(aws_route_table.route_table_private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.eks_private_nat_gws[0].id
+  nat_gateway_id         = aws_nat_gateway.private_nat_gws[0].id
 
   timeouts {
     create = "5m"
@@ -131,9 +131,9 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 ## Subnet Creation
-resource "aws_subnet" "eks_subnet_public" {
+resource "aws_subnet" "subnet_public" {
   count                = length(var.pub_subnet_cidrs) > 0 ? length(var.pub_subnet_cidrs) : 0
-  vpc_id               = aws_vpc.eks_vpc.id
+  vpc_id               = aws_vpc.vpc.id
   cidr_block           = var.pub_subnet_cidrs[count.index]
   availability_zone    = length(regexall("^[a-z]{2}-", element(data.aws_availability_zones.available_azs.names, count.index))) > 0 ? element(data.aws_availability_zones.available_azs.names, count.index) : null
   availability_zone_id = length(regexall("^[a-z]{2}-", element(data.aws_availability_zones.available_azs.names, count.index))) == 0 ? element(data.aws_availability_zones.available_azs.names, count.index) : null
@@ -151,9 +151,9 @@ resource "aws_subnet" "eks_subnet_public" {
 }
 
 
-resource "aws_subnet" "eks_subnet_private" {
+resource "aws_subnet" "subnet_private" {
   count                = length(var.priv_subnet_cidrs) > 0 ? length(var.priv_subnet_cidrs) : 0
-  vpc_id               = aws_vpc.eks_vpc.id
+  vpc_id               = aws_vpc.vpc.id
   cidr_block           = var.priv_subnet_cidrs[count.index]
   availability_zone    = length(regexall("^[a-z]{2}-", element(data.aws_availability_zones.available_azs.names, count.index))) > 0 ? element(data.aws_availability_zones.available_azs.names, count.index) : null
   availability_zone_id = length(regexall("^[a-z]{2}-", element(data.aws_availability_zones.available_azs.names, count.index))) == 0 ? element(data.aws_availability_zones.available_azs.names, count.index) : null
