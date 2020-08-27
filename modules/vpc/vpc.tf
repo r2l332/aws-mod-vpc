@@ -29,7 +29,6 @@ resource "aws_internet_gateway" "this" {
 }
 
 resource "aws_egress_only_internet_gateway" "eks_egress_gateway" {
-  # count  = var.create_network != true ? 0 : 1
   vpc_id = aws_vpc.eks_vpc.id
   tags   = local.egress_gateway
 }

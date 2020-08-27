@@ -54,7 +54,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 
 	terraform.Init(t, terraformOptions)
 
-	// defer terraform.Destroy(t, terraformOptions)
+	defer terraform.Destroy(t, terraformOptions)
 
 	terraform.Apply(t, terraformOptions)
 
