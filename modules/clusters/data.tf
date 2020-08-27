@@ -1,12 +1,18 @@
-data "aws_vpc" "eks_vpc" {
-  filter {
-    name   = "tag:Name"
-    values = ["eks.vpc"]
-  }
+data "aws_iam_role" "custom_cluster_iam_role" {
+  name  = "${var.name}ClusterRole"
 }
 
-data "aws_subnet" "eks_subnet" {
-  vpc_id   = data.aws_vpc.eks_vpc
-  for_each = data.aws_subnet_ids.eks_subnets.ids
-  id       = each.value
+data "aws_iam_policy_document" "cluster_assume_role_policy" {
+  statement {
+    sid = "EKSClusterAssumeRole"
+
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["eks.amazonaws.com"]
+    }
+  }
 }

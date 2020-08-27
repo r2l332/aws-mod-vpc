@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket         = var.bucket_name
+    bucket         = "eks-module-terraform-tfstate"
     key            = "vpc/terraform.tfstate"
-    region         = var.region
-    dynamodb_table = var.ddb_name
+    region         = "eu-west-1"
+    dynamodb_table = "terraform-state-lock"
   }
 }
