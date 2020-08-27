@@ -1,10 +1,18 @@
-## EKS Module
+## VPC Module
 
-WIP ... 
+Module to VPC plus 6 subnets; 3 private and 3 public.
+
+* VPC
+* 3 Private Subnets
+* 3 Public Subnets
+* NAT Gateway
+* Routes for each subnet and Route Table 
 
 ## Providers
 
-No provider.
+| Name | Version |
+|------|---------|
+| aws | n/a |
 
 ## Inputs
 

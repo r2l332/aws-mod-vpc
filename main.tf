@@ -6,14 +6,3 @@ module "eks_vpc" {
   priv_subnet_cidrs = var.priv_subnet_cidrs
   region            = var.region
 }
-
-# module "eks_cluster" {
-#   source         = "./modules/clusters"
-#   name           = var.name
-#   subnet_ids     = module.eks_vpc.eks_private_subnet
-# }
-
-# module "eks_workers" {
-#   source         = "./modules/workers"
-#   create_network = var.create_network
-# }
