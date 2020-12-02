@@ -4,7 +4,7 @@ output "vpc_id" {
 }
 
 output "public_subnet" {
-  value       = module.eks_vpc.eks_public_subnet
+  value       = module.vpc.eks_public_subnet
   description = "Returns public subnet ids"
 }
 
