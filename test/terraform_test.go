@@ -36,8 +36,8 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 			"region": region,
 			"name":   name,
 			"vpc_cidr": "10.0.0.0/16",
-			"pub_subnet_cidrs": "",
-			"priv_subnet_cidrs": "",
+			"pub_subnet_cidrs": []string{},
+			"priv_subnet_cidrs": []string{},
 		},
 // 		VarFiles: []string{"terraform.tfvars"},
 		EnvVars: map[string]string{
