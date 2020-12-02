@@ -21,7 +21,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	}
 	logger.Logf(t, "Terraform directory: %s", dir)
 
-	name := "eks"
+	name := fmt.Sprintf("main-%s", identifier)
 	
 	backendConfig := map[string]interface{}{
 		"bucket":         backendBucket,
