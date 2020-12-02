@@ -13,7 +13,7 @@ output "private_subnet" {
   description = "Returns private subnet ids"
 }
 
-output "route_table_id" {
+output "route_table_ids" {
   value       = module.vpc.route_table_ids
   description = "Returns route table ids"
 }
