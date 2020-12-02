@@ -14,6 +14,6 @@ output "private_subnet" {
 }
 
 output "route_table_id" {
-  value       = module.vpc.route_table_id
-  description = "Returns route table id"
+  value       = module.vpc.route_table_ids
+  description = "Returns route table ids"
 }
