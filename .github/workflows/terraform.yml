@@ -14,7 +14,9 @@ jobs:
           terraform_version: 0.13.5
           terraform_wrapper: false  
       - uses: FranzDiebold/github-env-vars-action@v2 
-      - uses: voxmedia/github-action-slack-notify-build@v1 
+      - uses: voxmedia/github-action-slack-notify-build@v1
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }} 
         with:
           channel: random
           status: STARTED
