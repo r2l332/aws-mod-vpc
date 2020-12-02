@@ -16,7 +16,7 @@ jobs:
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Git Message
       - uses: archive/github-actions-slack@v1.1.0
-        id: notify
+      - id: notify
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}  
           slack-channel: random
