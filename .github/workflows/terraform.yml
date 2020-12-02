@@ -17,7 +17,7 @@ jobs:
       - uses: archive/github-actions-slack@v1.1.0
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}  
-          slack-channel: random
+          slack-channel: bloop
           slack-text: Testing "${{ github.event_name }}" in "${{ github.repository }}"   
       - name: Download Go Modules
         run: go mod download
