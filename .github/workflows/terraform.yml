@@ -13,7 +13,12 @@ jobs:
         with:
           terraform_version: 0.13.5
           terraform_wrapper: false  
-      - uses: FranzDiebold/github-env-vars-action@v2      
+      - uses: FranzDiebold/github-env-vars-action@v2 
+      - uses: voxmedia/github-action-slack-notify-build@v1 
+        with:
+          channel: random
+          status: STARTED
+          color: good    
       - name: Download Go Modules
         run: go mod download
       - name: Run Go Tests
@@ -22,3 +27,14 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+            # Updates existing message from the first step
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: app-alerts
+          status: SUCCESS
+          color: good
