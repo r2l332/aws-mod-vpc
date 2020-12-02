@@ -16,7 +16,7 @@ jobs:
         run: go mod download
       - name: Run Go Tests
         working-directory: test
-        run: go test ./tests -test.timeout 0 -v -identifier 
+        run: go test ./test -test.timeout 0 -v -identifier CI_SHA_SHORT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
