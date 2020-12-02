@@ -15,11 +15,10 @@ jobs:
           terraform_wrapper: false  
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: archive/github-actions-slack@v1.1.0
-      - id: notify
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}  
           slack-channel: random
-          slack-text: Lee's "${{ github.event_name }}"ing a big hard CI test, and he's doing it from this "${{ github.repository }}" repo ... Duck you!   
+          slack-text: Lee's "${{ github.event_name }}"ing a big hard CI test, and he's doing it from "${{ github.repository }}" repo ... Duck you!   
       - name: Download Go Modules
         run: go mod download
       - name: Run Go Tests
@@ -29,5 +28,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Result from "Send Message"
-        run: echo "The result was ${{ steps.notify.outputs.slack-result }}"
+        run: echo "In the end this pile of wank's result was... ${{ steps.outputs.slack-result }}"
           
