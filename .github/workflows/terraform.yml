@@ -15,10 +15,12 @@ jobs:
           terraform_wrapper: false  
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: archive/github-actions-slack@v1.1.0
+      - name: Git Message
+        id: notify
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}  
-          slack-channel: bloop
-          slack-text: Testing "${{ github.event_name }}" in "${{ github.repository }}"   
+          slack-channel: random
+          slack-text: Lee's "${{ github.event_name }}"ing a big hard CI test, and he's doing it from this "${{ github.repository }}" repo ... Duck you!   
       - name: Download Go Modules
         run: go mod download
       - name: Run Go Tests
