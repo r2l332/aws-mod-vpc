@@ -14,7 +14,6 @@ Module to VPC plus 6 subnets; 3 private and 3 public.
 |------|---------|
 | aws | n/a |
 
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
