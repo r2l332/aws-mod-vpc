@@ -35,7 +35,6 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 		Vars: map[string]interface{}{
 			"region": region,
 			"name":   name,
-			"create_network": true,
 			"vpc_cidr": "10.0.0.0/16",
 			"pub_subnet_cidrs": []string{"10.0.0.0/24","10.0.1.0/24","10.0.2.0/24"},
 			"priv_subnet_cidrs": []string{"10.0.3.0/24","10.0.4.0/24","10.0.5.0/24"},
