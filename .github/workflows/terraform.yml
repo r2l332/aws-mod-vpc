@@ -13,30 +13,21 @@ jobs:
         with:
           terraform_version: 0.13.5
           terraform_wrapper: false  
-      - uses: FranzDiebold/github-env-vars-action@v2 
-      - uses: voxmedia/github-action-slack-notify-build@v1
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }} 
-        with:
-          channel: random
-          status: STARTED
-          color: good    
+      - uses: FranzDiebold/github-env-vars-action@v2   
       - name: Download Go Modules
         run: go mod download
+      - uses: archive/github-actions-slack@v1.0.3
+        with:
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }  
+          slack-channel: random
+          slack-text: STARTED "${{ github.event_name }}" in "${{ github.repository }}"
+      - name: Result from "Send Message"
       - name: Run Go Tests
         working-directory: test
         run: go test -test.timeout 0 -v -identifier $CI_SHA_SHORT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Notify slack success
-        if: success()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-            # Updates existing message from the first step
-          message_id: ${{ steps.slack.outputs.message_id }}
-          channel: app-alerts
-          status: SUCCESS
-          color: good
+      - name: Result from "Send Message"
+        run: echo "The result was ${{ steps.notify.outputs.slack-result }}"
+          
