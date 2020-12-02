@@ -22,7 +22,9 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	logger.Logf(t, "Terraform directory: %s", dir)
 
 	name := "eks"
-
+	pubSubs := []string{"10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"}
+	privSubs := []string{"10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"}
+	
 	backendConfig := map[string]interface{}{
 		"bucket":         backendBucket,
 		"region":         region,
@@ -36,8 +38,8 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 			"region": region,
 			"name":   name,
 			"vpc_cidr": "10.0.0.0/16",
-			"pub_subnet_cidrs": []string{"10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"},
-			"priv_subnet_cidrs": []string{"10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"},
+			"pub_subnet_cidrs": pubSubs,
+			"priv_subnet_cidrs": privSubs,
 		},
 // 		VarFiles: []string{"terraform.tfvars"},
 		EnvVars: map[string]string{
