@@ -12,7 +12,7 @@ jobs:
       - uses:  hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.5
-          terraform_wrapper: false:  
+          terraform_wrapper: false  
       - uses: FranzDiebold/github-env-vars-action@v2      
       - name: Download Go Modules
         run: go mod download
