@@ -14,7 +14,7 @@ jobs:
           terraform_version: 0.13.5
           terraform_wrapper: false  
       - uses: FranzDiebold/github-env-vars-action@v2
-      - uses: archive/github-actions-slack@v1.0.3
+      - uses: archive/github-actions-slack@v1.1.0
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}  
           slack-channel: random
