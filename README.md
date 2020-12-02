@@ -19,8 +19,8 @@ Module to VPC plus 6 subnets; 3 private and 3 public.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
 | name | Name of VPC stack - This will also be used in subnet names and other network related components | `string` | n/a | yes |
-| priv\_subnet\_cidrs | List of private subnets to create | `list(string)` | n/a | yes |
-| pub\_subnet\_cidrs | List of public subnets to create | `list(string)` | n/a | yes |
+| priv\_subnet\_cidrs | List of private subnets to create | `list(string)` | n/a | no |
+| pub\_subnet\_cidrs | List of public subnets to create | `list(string)` | n/a | no |
 | region | Where to deploy VPC | `string` | n/a | yes |
 | vpc\_cidr | VPC Cidr to create e.g `10.0.0.0/16` | `string` | n/a | yes |
 
