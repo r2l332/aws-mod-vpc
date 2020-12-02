@@ -17,6 +17,6 @@ locals {
     Name    = "${var.name}.internet.gateway"
     service = "web"
   }
-  privsnet = var.priv_subnet_cidrs != "" ? var.priv_subnet_cidrs : var.private_cidrs
-  pubsnet  = var.priv_subnet_cidrs != "" ? var.pub_subnet_cidrs  : var.public_cidrs
+  privsnet = length(var.priv_subnet_cidrs) != 0 ? var.priv_subnet_cidrs : var.private_cidrs
+  pubsnet  = length(var.priv_subnet_cidrs) != 0 ? var.pub_subnet_cidrs  : var.public_cidrs
 }
