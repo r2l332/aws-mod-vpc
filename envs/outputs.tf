@@ -10,6 +10,10 @@ output "private_subnet" {
   value = module.test_vpc.private_subnet
 }
 
+output "data_subnet" {
+  value = module.test_vpc.data_subnet
+}
+
 output "route_table_ids" {
   value = module.test_vpc.route_table_ids
 }

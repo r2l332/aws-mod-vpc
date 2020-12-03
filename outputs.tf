@@ -13,6 +13,11 @@ output "private_subnet" {
   description = "Returns private subnet ids"
 }
 
+output "data_subnet" {
+  value       = module.vpc.data_subnet
+  description = "Returns data subnet ids"
+}
+
 output "route_table_ids" {
   value       = module.vpc.route_table_ids
   description = "Returns route table ids"

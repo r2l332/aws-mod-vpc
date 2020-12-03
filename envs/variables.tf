@@ -9,3 +9,7 @@ variable "priv_subnet_cidrs" {
   description = "List of private subnets to create"
   type        = list(string)
 }
+variable "data_subnet_cidrs" {
+  description = "List of data subnets to create"
+  type        = list(string)
+}

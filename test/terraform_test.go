@@ -38,6 +38,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 			"vpc_cidr": "10.0.0.0/16",
 			"pub_subnet_cidrs": []string{},
 			"priv_subnet_cidrs": []string{},
+			"data_subnet_cidrs": []string{},
 		},
 
 		EnvVars: map[string]string{
@@ -64,10 +65,12 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	vpcId := terraform.Output(t, terraformOptions, "vpc_id")
 	pubSubnetId := terraform.OutputList(t, terraformOptions, "public_subnet")
 	privSubnetId := terraform.OutputList(t, terraformOptions, "private_subnet")
+	dataSubnetId := terraform.OutputList(t, terraformOptions, "data_subnet")
 	// routeTableId 	:= terraform.Output(t, terraformOptions, "route_table_ids")
 	
 	assert.NotNil(t, privSubnetId)
 	assert.NotNil(t, pubSubnetId)
+	assert.NotNil(t, dataSubnetId)
 	assert.NotNil(t, vpcId)
 	
 	vpcSvc := ec2.New(getDevAccountSession())
@@ -194,4 +197,57 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 		}
 	}
 	assert.True(t, priv2)
+
+	dataSubNetInput0 := &ec2.DescribeSubnetsInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   awssdk.String("subnet-id"),
+				Values: []*string{awssdk.String(dataSubnetId[0])},
+			},
+		},
+	}
+
+	dataSubNetInput1 := &ec2.DescribeSubnetsInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   awssdk.String("subnet-id"),
+				Values: []*string{awssdk.String(dataSubnetId[1])},
+			},
+		},
+	}
+
+	dataSubNetInput2 := &ec2.DescribeSubnetsInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   awssdk.String("subnet-id"),
+				Values: []*string{awssdk.String(dataSubnetId[2])},
+			},
+		},
+	}
+
+	getDataSub0, err := vpcSvc.DescribeSubnets(dataSubNetInput0)
+	getDataSub1, err := vpcSvc.DescribeSubnets(dataSubNetInput1)
+	getDataSub2, err := vpcSvc.DescribeSubnets(dataSubNetInput2)
+
+	data0 := false
+	for _, snet := range getDataSub0.Subnets {
+		if *snet.SubnetId == dataSubnetId[0] {
+			data0 = true
+		}
+	}
+	assert.True(t, data0)
+	data1 := false
+	for _, snet := range getDataSub1.Subnets {
+		if *snet.SubnetId == dataSubnetId[1] {
+			data1 = true
+		}
+	}
+	assert.True(t, data1)
+	data2 := false
+	for _, snet := range getDataSub2.Subnets {
+		if *snet.SubnetId == dataSubnetId[2] {
+			data2 = true
+		}
+	}
+	assert.True(t, data2)
 }

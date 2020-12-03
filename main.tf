@@ -5,5 +5,6 @@ module "vpc" {
   region            = var.region
   pub_subnet_cidrs  = var.pub_subnet_cidrs
   priv_subnet_cidrs = var.priv_subnet_cidrs
+  data_subnet_cidrs = var.data_subnet_cidrs
 }
   

@@ -89,6 +89,22 @@ resource "aws_route_table" "route_table_private" {
   )
 }
 
+resource "aws_route_table" "route_table_data" {
+  count = length(local.datasnet) > 0 ? 1 : 0
+
+  vpc_id = aws_vpc.vpc.id
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s.data.rt.%s",
+        var.name,
+        element(data.aws_availability_zones.available_azs.names, count.index),
+      )
+    }
+  )
+}
+
 ## Route Table Creation
 resource "aws_route_table_association" "public_association" {
   count = length(local.pubsnet) > 0 ? length(local.pubsnet) : 0
@@ -102,6 +118,14 @@ resource "aws_route_table_association" "private_association" {
 
   subnet_id      = element(aws_subnet.subnet_private.*.id, count.index)
   route_table_id = aws_route_table.route_table_private[0].id
+
+}
+
+resource "aws_route_table_association" "data_association" {
+  count = length(local.datasnet) > 0 ? length(local.datasnet) : 0
+
+  subnet_id      = element(aws_subnet.subnet_data.*.id, count.index)
+  route_table_id = aws_route_table.route_table_data[0].id
 
 }
 
@@ -129,6 +153,7 @@ resource "aws_route" "private_nat_gateway" {
     create = "5m"
   }
 }
+
 
 ## Subnet Creation
 resource "aws_subnet" "subnet_public" {
@@ -162,6 +187,25 @@ resource "aws_subnet" "subnet_private" {
     {
       "Name" = format(
         "%s.private.snet-%s",
+        var.name,
+        element(data.aws_availability_zones.available_azs.names, count.index),
+      )
+    },
+    local.subnet_tags_private,
+  )
+}
+
+resource "aws_subnet" "subnet_data" {
+  count                = length(local.datasnet) > 0 ? length(local.datasnet) : 0
+  vpc_id               = aws_vpc.vpc.id
+  cidr_block           = local.datasnet[count.index]
+  availability_zone    = length(regexall("^[a-z]{2}-", element(data.aws_availability_zones.available_azs.names, count.index))) > 0 ? element(data.aws_availability_zones.available_azs.names, count.index) : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", element(data.aws_availability_zones.available_azs.names, count.index))) == 0 ? element(data.aws_availability_zones.available_azs.names, count.index) : null
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s.data.snet-%s",
         var.name,
         element(data.aws_availability_zones.available_azs.names, count.index),
       )
