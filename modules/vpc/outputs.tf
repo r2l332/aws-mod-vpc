@@ -10,6 +10,10 @@ output "private_subnet" {
   value = aws_subnet.subnet_private[*].id
 }
 
+output "data_subnet" {
+  value = aws_subnet.subnet_data[*].id
+}
+
 output "route_table_ids" {
   value = aws_route_table.route_table_public[*].id
 }
