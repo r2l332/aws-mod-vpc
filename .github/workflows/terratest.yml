@@ -16,7 +16,7 @@ jobs:
       - uses: FranzDiebold/github-env-vars-action@v2      
       - name: Download Go Modules
         run: go mod download
-      - name: Tearraform Linting
+      - name: Terraform Linting
         run: terraform fmt -recursive -check
       - name: Go Liniting 
         working-directory: test
@@ -24,7 +24,6 @@ jobs:
       - name: Run Go Tests
         working-directory: test
         run: | 
-          go fmt
           go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -33,8 +32,8 @@ jobs:
         with:
           status: ${{ job.status }}
           job_name: Terratesting VPC Module
-          fields: repo,message,commit,author,ref,workflow,job # selectable (default: repo,message)
+          fields: repo,message,commit,author,ref,workflow 
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
           
