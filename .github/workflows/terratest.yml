@@ -18,6 +18,9 @@ jobs:
         run: go mod download
       - name: Tearraform Linting
         run: terraform fmt -recursive -check
+        working-directory: test
+      - name: Go Liniting 
+        run: go fmt
       - name: Run Go Tests
         working-directory: test
         run: | 
