@@ -21,9 +21,9 @@ jobs:
       #   run: terraform fmt -recursive -check
       #   continue-on-error: false 
 
-      - name: Golang Linting
-        working-directory: test
-        run: go fmt
+      # - name: Golang Linting
+      #   working-directory: test
+      #   run: go fmt
 
       - name: Run Go Tests
         working-directory: test
@@ -32,7 +32,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+      
       - name: Send Slack Notification    
       - uses: 8398a7/action-slack@v3
         with:
