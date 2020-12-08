@@ -3,17 +3,21 @@ name: Unit Tests
 on: push
 
 jobs:
-  terraform-testing:
+  checkout:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Terraform linting
-        uses:  hashicorp/setup-terraform@v1
+      
+  terraform-linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses:  hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.5
-          terraform_wrapper: false 
+          erraform_wrapper: false
+      - name: Terraform linting
         run: terraform fmt -recursive -check
-
+        
   golang-linting:
     runs-on: ubuntu-latest
     steps:
