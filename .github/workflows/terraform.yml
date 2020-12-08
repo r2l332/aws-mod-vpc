@@ -20,8 +20,6 @@ jobs:
   # golang-linting:
   #   runs-on: ubuntu-latest
   #   steps:
-      - name: checkout
-        uses: actions/checkout@v2
       - name: Run Golang Linting
         uses: actions/setup-go@v1
         with:
@@ -29,12 +27,9 @@ jobs:
         working-directory: test
         run: go fmt
 
-  # golang-terratesting:
-    
+  # golang-terratesting: 
   #   runs-on: ubuntu-latest
   #   steps:
-      - name: checkout
-        uses: actions/checkout@v2
       - name: git env vars
         uses: FranzDiebold/github-env-vars-action@v2 
       - name: checkout terraform
