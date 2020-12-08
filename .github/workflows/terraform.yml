@@ -4,7 +4,6 @@ on: push
 
 jobs:
   terraform-testing:
-    name: Run Terrform Linting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +15,6 @@ jobs:
         run: terraform fmt -recursive -check
 
   golang-linting:
-    name: Run Go Linting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v1
@@ -27,7 +25,8 @@ jobs:
         run: go fmt
 
   golang-terratesting:
-    name: Run Terratest
+    env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     runs-on: ubuntu-latest
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2 
@@ -48,8 +47,6 @@ jobs:
           status: ${{ job.status }}
           job_name: Terratesting VPC Module
           fields: repo,message,commit,author,ref,workflow,job 
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
         if: always()
 
           
