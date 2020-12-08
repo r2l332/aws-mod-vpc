@@ -13,18 +13,27 @@ jobs:
         with:
           terraform_version: 0.13.5
           terraform_wrapper: false 
-        # run: terraform fmt -recursive -check
-      - uses: FranzDiebold/github-env-vars-action@v2      
+      - uses: FranzDiebold/github-env-vars-action@v2 
+
+      - name: Terraform linting
+        run: terraform -recursive -check  
+
       - name: Download Go Modules
         run: go mod download
+      
+      - name: Golang Linting
+        working-directory: test
+        run: go fmt
+
       - name: Run Go Tests
         working-directory: test
         run: | 
-          go fmt
           go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Send Slack Notification    
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
