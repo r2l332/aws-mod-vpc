@@ -7,4 +7,4 @@ module "vpc" {
   priv_subnet_cidrs = var.priv_subnet_cidrs
   data_subnet_cidrs = var.data_subnet_cidrs
 }
-  
+

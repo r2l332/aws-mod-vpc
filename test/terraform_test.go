@@ -22,7 +22,7 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	logger.Logf(t, "Terraform directory: %s", dir)
 
 	name := fmt.Sprintf("main-%s", identifier)
-	
+
 	backendConfig := map[string]interface{}{
 		"bucket":         backendBucket,
 		"region":         region,
@@ -33,10 +33,10 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 
 	terraformOptions := &terraform.Options{
 		Vars: map[string]interface{}{
-			"region": region,
-			"name":   name,
-			"vpc_cidr": "10.0.0.0/16",
-			"pub_subnet_cidrs": []string{},
+			"region":            region,
+			"name":              name,
+			"vpc_cidr":          "10.0.0.0/16",
+			"pub_subnet_cidrs":  []string{},
 			"priv_subnet_cidrs": []string{},
 			"data_subnet_cidrs": []string{},
 		},
@@ -67,12 +67,12 @@ func testTerraformApply(t *testing.T, backendBucket, backendTable string) {
 	privSubnetId := terraform.OutputList(t, terraformOptions, "private_subnet")
 	dataSubnetId := terraform.OutputList(t, terraformOptions, "data_subnet")
 	// routeTableId 	:= terraform.Output(t, terraformOptions, "route_table_ids")
-	
+
 	assert.NotNil(t, privSubnetId)
 	assert.NotNil(t, pubSubnetId)
 	assert.NotNil(t, dataSubnetId)
 	assert.NotNil(t, vpcId)
-	
+
 	vpcSvc := ec2.New(getDevAccountSession())
 
 	vpcInput := &ec2.DescribeVpcsInput{

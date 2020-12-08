@@ -18,6 +18,6 @@ locals {
     service = "web"
   }
   privsnet = length(var.priv_subnet_cidrs) != 0 ? var.priv_subnet_cidrs : var.private_cidrs
-  pubsnet  = length(var.pub_subnet_cidrs)  != 0 ? var.pub_subnet_cidrs  : var.public_cidrs
+  pubsnet  = length(var.pub_subnet_cidrs) != 0 ? var.pub_subnet_cidrs : var.public_cidrs
   datasnet = length(var.data_subnet_cidrs) != 0 ? var.data_subnet_cidrs : var.data_cidrs
 }

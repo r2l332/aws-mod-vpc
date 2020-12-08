@@ -1,8 +1,8 @@
 name: Unit Tests
 on: push
 jobs:
-  go-tests:
-    name: Run Go Unit Tests
+  terraform-linting-terratesting:
+    name: Linting and Testing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,13 +12,19 @@ jobs:
       - uses:  hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.5
-          terraform_wrapper: false  
+          terraform_wrapper: false 
       - uses: FranzDiebold/github-env-vars-action@v2      
       - name: Download Go Modules
         run: go mod download
+      - name: Terraform Linting
+        run: terraform fmt -recursive -check
+      - name: Go Linting 
+        working-directory: test
+        run: go fmt
       - name: Run Go Tests
         working-directory: test
-        run: go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
+        run: | 
+          go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -26,8 +32,8 @@ jobs:
         with:
           status: ${{ job.status }}
           job_name: Terratesting VPC Module
-          fields: repo,message,commit,author,ref,workflow,job # selectable (default: repo,message)
+          fields: repo,message,commit,author,ref,workflow 
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
           
