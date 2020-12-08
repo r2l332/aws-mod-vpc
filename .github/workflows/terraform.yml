@@ -1,7 +1,5 @@
 name: Unit Tests
-
 on: push
-
 jobs:
   terraform-linting-terratesting:
     name: Linting and Testing
@@ -15,7 +13,7 @@ jobs:
         with:
           terraform_version: 0.13.5
           terraform_wrapper: false 
-        run: terraform fmt -recursive -check
+        # run: terraform fmt -recursive -check
       - uses: FranzDiebold/github-env-vars-action@v2      
       - name: Download Go Modules
         run: go mod download
