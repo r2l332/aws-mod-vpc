@@ -18,7 +18,7 @@ jobs:
         run: go mod download
       - name: Terraform Linting
         run: terraform fmt -recursive -check
-      - name: Go Liniting 
+      - name: Go Linting 
         working-directory: test
         run: go fmt
       - name: Run Go Tests
