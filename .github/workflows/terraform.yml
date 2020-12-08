@@ -4,43 +4,36 @@ on: push
 
 jobs:
   terraform-linting-terratesting:
-    name: Linting and Testing 
+    name: Linting and Testing
     runs-on: ubuntu-latest
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
-      - name: checkout
       - uses: actions/checkout@v2
-      - name: git env vars
-      - uses: FranzDiebold/github-env-vars-action@v2
-      - name: Terraform linting
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 0.13.5
-          terraform_wrapper: false
-        run: terraform fmt -recursive -check
-
-
-      - name: Run Golang Linting
       - uses: actions/setup-go@v1
         with:
           go-version: 1.13
+      - uses:  hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.5
+          terraform_wrapper: false 
+        run: terraform fmt -recursive -check
+      - uses: FranzDiebold/github-env-vars-action@v2      
+      - name: Download Go Modules
+        run: go mod download
+      - name: Run Go Tests
         working-directory: test
-        run: go fmt
- 
-      - name: Run Golang Linting
-        run: |
-         go mod download
-         test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
+        run: | 
+          go fmt
+          go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: send slack message
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           job_name: Terratesting VPC Module
-          fields: repo,message,commit,author,ref,workflow,job 
+          fields: repo,message,commit,author,ref,workflow,job # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
         if: always()
 
           
