@@ -3,21 +3,23 @@ name: Unit Tests
 on: push
 
 jobs:
-  # terraform-linting:
+  terraform-linting:
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Terraform linting
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.5
+          terraform_wrapper: false
+        run: terraform fmt -recursive -check
+
+  # golang-linting:
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - name: checkout
-  #       uses: actions/checkout@v2
-  #     - name: Terraform linting
-  #       uses: hashicorp/setup-terraform@v1
-  #       with:
-  #         terraform_version: 0.13.5
-  #         terraform_wrapper: false
-  #       run: terraform fmt -recursive -check
-
-  golang-linting:
-    runs-on: ubuntu-latest
-    steps:
       - name: checkout
         uses: actions/checkout@v2
       - name: Run Golang Linting
@@ -27,11 +29,10 @@ jobs:
         working-directory: test
         run: go fmt
 
-  golang-terratesting:
-    env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    runs-on: ubuntu-latest
-    steps:
+  # golang-terratesting:
+    
+  #   runs-on: ubuntu-latest
+  #   steps:
       - name: checkout
         uses: actions/checkout@v2
       - name: git env vars
