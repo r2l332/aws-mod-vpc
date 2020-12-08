@@ -30,14 +30,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2 
-      - name: Download Go Modules
-        uses: actions/setup-go@v1
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.5
+          terraform_wrapper: false
+      - uses: actions/setup-go@v1
         with:
           go-version: 1.13     
-        run: go mod download
       - name: Run Golang Linting
         working-directory: test
-        run: test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
+        run: |
+         go mod download
+         test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
