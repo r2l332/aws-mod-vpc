@@ -13,15 +13,15 @@ jobs:
       - uses:  hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.5
-          terraform_wrapper: false  
-
-      - name: Terraform linting
-        run: terraform fmt -recursive -check
-        continue-on-error: false  
+          terraform_wrapper: false   
 
       - name: Download Go Modules
         run: go mod download
       
+      - name: Terraform linting
+        run: terraform fmt -recursive -check
+        continue-on-error: false 
+
       - name: Golang Linting
         working-directory: test
         run: go fmt
