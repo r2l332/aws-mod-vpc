@@ -1,4 +1,4 @@
-variable "name" {
+ variable "name" {
   description = "Name of VPC stack - This will also be used in subnet names and other network related components"
   type        = string
 }
