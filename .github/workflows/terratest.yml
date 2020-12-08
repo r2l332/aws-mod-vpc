@@ -18,9 +18,9 @@ jobs:
       - name: Download Go Modules
         run: go mod download
       
-      - name: Terraform linting
-        run: terraform fmt -recursive -check
-        continue-on-error: false 
+      # - name: Terraform linting
+      #   run: terraform fmt -recursive -check
+      #   continue-on-error: false 
 
       - name: Golang Linting
         working-directory: test
