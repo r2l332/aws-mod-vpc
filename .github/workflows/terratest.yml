@@ -12,24 +12,20 @@ jobs:
       - uses:  hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.5
-          terraform_wrapper: false   
-      - uses: FranzDiebold/github-env-vars-action@v2
+          terraform_wrapper: false 
+      - uses: FranzDiebold/github-env-vars-action@v2      
       - name: Download Go Modules
         run: go mod download
-      - name: Terraform linting
+      - name: Tearraform Linting
         run: terraform fmt -recursive -check
-        continue-on-error: false 
-      - name: Golang Linting
-        working-directory: test
-        run: go fmt
       - name: Run Go Tests
         working-directory: test
         run: | 
+          go fmt
           go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Send Slack Notification    
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -38,5 +34,4 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
         if: always()
-
           
