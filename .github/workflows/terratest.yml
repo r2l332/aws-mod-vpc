@@ -18,16 +18,19 @@ jobs:
         with:
           terraform_version: 0.13.5
           terraform_wrapper: false
-      - uses: ItsKarma/aws-cli@v1.70.0
       - uses: FranzDiebold/github-env-vars-action@v2  
       - name: Create AWS Bucket
-        run: s3 mb s3://eks-module-terraform-tfstate --endpoint-url=http://localhost:4566
+        uses: ItsKarma/aws-cli@v1.70.0
+        with:
+          args: s3 mb s3://eks-module-terraform-tfstate --endpoint-url=http://localhost:4566
         env:
           AWS_ACCESS_KEY_ID: "noroute"
           AWS_SECRET_ACCESS_KEY: "noroute"
           AWS_DEFAULT_REGION: "eu-west-1"
       - name: Create Dynamodb Table
-        run: dynamodb create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
+        uses: ItsKarma/aws-cli@v1.70.0
+        with: 
+          args: dynamodb create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
         env:
           AWS_ACCESS_KEY_ID: "noroute"
           AWS_SECRET_ACCESS_KEY: "noroute"
