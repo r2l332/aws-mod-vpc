@@ -37,7 +37,7 @@ jobs:
           tag_name: v0.${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ GITHUB_ENV == "master" }}
+        if: ${{ $GITHUB_ENV == "master" }}
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
