@@ -41,9 +41,8 @@ jobs:
       - name: Create Dynamodb Table
         uses: ItsKarma/aws-cli@v1.70.0
         with: 
-          args: dynamodb --endpoint-url=http://127.0.0.1:4566 create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
+          args: dynamodb --endpoint-url=http://127.0.0.1:4566 create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5 --region eu-west-1
         env:
-          DEFAULT_REGION: eu-west-1
           AWS_ACCESS_KEY_ID: localkey
           AWS_SECRET_ACCESS_KEY: localsecret
           AWS_ACCOUNT_ID: "000000000000"
@@ -69,8 +68,8 @@ jobs:
         run: | 
           go test -test.timeout 0 -v -identifier $CI_SHA_SHORT 
         env:
-          AWS_ACCESS_KEY_ID: noroute
-          AWS_SECRET_ACCESS_KEY: noroute
+          AWS_ACCESS_KEY_ID: localkey
+          AWS_SECRET_ACCESS_KEY: localsecret
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
