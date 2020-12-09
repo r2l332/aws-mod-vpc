@@ -9,6 +9,10 @@ jobs:
         image: localstack/localstack:latest
         env:
           SERVICES: ec2,dynamodb,s3
+          DEFAULT_REGION: eu-west-1
+        ports:
+          - 4566:4566
+          - 4571:4571
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v1
