@@ -9,7 +9,9 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws"
 	awst "github.com/gruntwork-io/terratest/modules/aws"
+	//"github.com/aws/aws-sdk-go/aws/endpoints"
 )
 
 var region string
@@ -63,24 +65,24 @@ func findTerraformBackend(t *testing.T) (string, string) {
 	return bucket, table
 }
 
-myCustomResolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
-    if service == endpoints.S3ServiceID {
-        return endpoints.ResolvedEndpoint{
-            URL:           "127.0.0.1:4566",
-        }, nil
-    }
+// func myCustomResolver(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+//     if service == endpoints.Ec2ServiceID {
+//         return endpoints.ResolvedEndpoint{
+//             URL:           "127.0.0.1",
+//         }, nil
+//     }
 
-    return endpoints.DefaultResolver().EndpointFor(service, region, optFns...)
-}
+//     return endpoints.DefaultResolver().EndpointFor(service, region, optFns...)
+// }
 
 func getDevAccountSession() *session.Session {
 	if devRoleArn == "" {
 		// No dev role, so we should default credentials
-		return session.Must(awst.NewSession(&aws.Config{
-			Region: aws.String("us-west-2"),region),
-			EndpointResolver: endpoints.ResolverFunc(myCustomResolver),
-		)
+		return session.Must(session.NewSession(&aws.Config{
+			Region: aws.String("us-west-2"),
+			//EndpointResolver: endpoints.ResolverFunc(myCustomResolver),
+			Endpoint: aws.String("127.0.0.1:4566"),
+		}))
 	}
-
 	return session.Must(awst.NewAuthenticatedSessionFromRole(region, devRoleArn))
 }
