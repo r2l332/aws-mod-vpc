@@ -64,6 +64,7 @@ func findTerraformBackend(t *testing.T) (string, string) {
 	return bucket, table
 }
 
+
 func getDevAccountSession() *session.Session {
 	if devRoleArn == "" {
 		// No dev role, so we should default credentials
