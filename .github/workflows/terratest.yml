@@ -10,6 +10,8 @@ jobs:
         env:
           SERVICES: ec2,dynamodb,s3
           DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: localkey
+          AWS_SECRET_ACCESS_KEY: localsecret
         ports:
           - 4566:4566
           - 4571:4571
@@ -26,19 +28,19 @@ jobs:
       - name: Create AWS Bucket
         uses: ItsKarma/aws-cli@v1.70.0
         with:
-          args: s3 mb s3://eks-module-terraform-tfstate --endpoint-url=http://localhost:4566
+          args: s3 mb --endpoint-url=http://localhost:4566 s3://eks-module-terraform-tfstate
         env:
-          AWS_ACCESS_KEY_ID: "noroute"
-          AWS_SECRET_ACCESS_KEY: "noroute"
-          AWS_DEFAULT_REGION: "eu-west-1"
+          DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: localkey
+          AWS_SECRET_ACCESS_KEY: localsecret
       - name: Create Dynamodb Table
         uses: ItsKarma/aws-cli@v1.70.0
         with: 
-          args: dynamodb create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
+          args: dynamodb --endpoint-url=http://localhost:4566 create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
         env:
-          AWS_ACCESS_KEY_ID: "noroute"
-          AWS_SECRET_ACCESS_KEY: "noroute"
-          AWS_DEFAULT_REGION: "eu-west-1"
+          DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: localkey
+          AWS_SECRET_ACCESS_KEY: localsecret
       - name: Download Go Modules
         run: go mod download
       - name: Terraform Linting
