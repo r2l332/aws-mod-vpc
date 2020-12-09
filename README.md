@@ -1,5 +1,7 @@
 ## VPC Module
 
+[![AppVeyor](https://img.shields.io/appveyor/build/r2l332/aws-mod-vpc)](https://img.shields.io/github/workflow/status/r2l332/aws-mod-vpc/terratest)
+
 Module to VPC plus 6 subnets; 3 private and 3 public.
 
 * VPC
