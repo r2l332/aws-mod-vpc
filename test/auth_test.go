@@ -82,6 +82,7 @@ func getDevAccountSession() *session.Session {
 			Region: aws.String("us-west-2"),
 			//EndpointResolver: endpoints.ResolverFunc(myCustomResolver),
 			Endpoint: aws.String("127.0.0.1:4566"),
+			DisableSSL: true,
 		}))
 	}
 	return session.Must(awst.NewAuthenticatedSessionFromRole(region, devRoleArn))
