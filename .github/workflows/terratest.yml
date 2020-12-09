@@ -28,19 +28,21 @@ jobs:
       - name: Create AWS Bucket
         uses: ItsKarma/aws-cli@v1.70.0
         with:
-          args: s3 mb --endpoint-url=http://localhost:4566 s3://eks-module-terraform-tfstate
+          args: s3 mb --endpoint-url=http://0.0.0.0:4566 s3://eks-module-terraform-tfstate
         env:
           DEFAULT_REGION: eu-west-1
           AWS_ACCESS_KEY_ID: localkey
           AWS_SECRET_ACCESS_KEY: localsecret
+          AWS_ACCOUNT_ID: "000000000000"
       - name: Create Dynamodb Table
         uses: ItsKarma/aws-cli@v1.70.0
         with: 
-          args: dynamodb --endpoint-url=http://localhost:4566 create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
+          args: dynamodb --endpoint-url=http://0.0.0.0:4566 create-table --table-name terraform-state-lock --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=5
         env:
           DEFAULT_REGION: eu-west-1
           AWS_ACCESS_KEY_ID: localkey
           AWS_SECRET_ACCESS_KEY: localsecret
+          AWS_ACCOUNT_ID: "000000000000"
       - name: Download Go Modules
         run: go mod download
       - name: Terraform Linting
