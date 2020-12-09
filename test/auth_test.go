@@ -63,10 +63,23 @@ func findTerraformBackend(t *testing.T) (string, string) {
 	return bucket, table
 }
 
+myCustomResolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+    if service == endpoints.S3ServiceID {
+        return endpoints.ResolvedEndpoint{
+            URL:           "127.0.0.1:4566",
+        }, nil
+    }
+
+    return endpoints.DefaultResolver().EndpointFor(service, region, optFns...)
+}
+
 func getDevAccountSession() *session.Session {
 	if devRoleArn == "" {
 		// No dev role, so we should default credentials
-		return session.Must(awst.NewAuthenticatedSession(region))
+		return session.Must(awst.NewSession(&aws.Config{
+			Region: aws.String("us-west-2"),region),
+			EndpointResolver: endpoints.ResolverFunc(myCustomResolver),
+		)
 	}
 
 	return session.Must(awst.NewAuthenticatedSessionFromRole(region, devRoleArn))
