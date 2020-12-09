@@ -7,14 +7,27 @@ jobs:
     services: 
       localstack:
         image: localstack/localstack:latest
+        ports:
+          - 4566:4566 # Localstack exposes all services on same port
         env:
-          SERVICES: ec2,dynamodb,s3
+          SERVICES: ${{ env.SERVICES }}
+          DEBUG: ""
+          DATA_DIR: ""
+          LAMBDA_EXECUTOR: ""
+          KINESIS_ERROR_PROBABILITY: ""
+          DOCKER_HOST: unix:///var/run/docker.sock
+          HOST_TMP_FOLDER: "/tmp"
+          HOSTNAME_EXTERNAL: ${{ env.AWS_HOST }}
           DEFAULT_REGION: eu-west-1
           AWS_ACCESS_KEY_ID: localkey
           AWS_SECRET_ACCESS_KEY: localsecret
-        ports:
-          - 4566:4566
-          - 4571:4571
+        options: >-
+          --name=localstack
+          --health-cmd="curl -sS 127.0.0.1:4566 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v1
