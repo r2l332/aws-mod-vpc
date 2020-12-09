@@ -28,11 +28,6 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
-resource "aws_egress_only_internet_gateway" "egress_gateway" {
-  vpc_id = aws_vpc.vpc.id
-  tags   = local.egress_gateway
-}
-
 ## Creation Of NAT GW's
 resource "aws_nat_gateway" "private_nat_gws" {
   count = length(local.pubsnet) > 0 ? 1 : 0
