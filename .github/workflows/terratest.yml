@@ -13,7 +13,10 @@ jobs:
         with:
           terraform_version: 0.13.5
           terraform_wrapper: false 
-      - uses: FranzDiebold/github-env-vars-action@v2      
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Extract Branch Name
+        id: branch
+        run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV      
       - name: Download Go Modules
         run: go mod download
       - name: Terraform Linting
@@ -34,7 +37,7 @@ jobs:
           tag_name: v0.${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: contains(github.ref, "master")
+        if: ${{ GITHUB_ENV == "master" }}
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
