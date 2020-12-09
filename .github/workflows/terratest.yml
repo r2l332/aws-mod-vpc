@@ -3,9 +3,7 @@ on: pull_request
 jobs:
   terraform-linting-terratesting:
     name: Linting and Testing
-    runs-on: ubuntu-latest
-    container:
-      image: amazon/aws-cli
+    runs-on: ubuntu-latest 
     services: 
       localstack:
         image: localstack/localstack:latest
